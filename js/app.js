@@ -1,38 +1,48 @@
-const container = document.querySelector('#scene-container')
+let container, camera, renderer, scene, mesh
 
-const scene = new THREE.Scene()
+const init = () => {
+  container = document.querySelector('#scene-container')
 
-scene.background = new THREE.Color('skyblue')
+  scene = new THREE.Scene()
 
-const FOV = 35
-const aspectRatio = container.clientWidth / container.clientHeight
-const NEAR = 0.1
-// A scene 100m big is a decent size for a scene
-const FAR = 100
+  scene.background = new THREE.Color('skyblue')
 
-// viewing fustrum = four-sided rectangular prism with top cut off
-const camera = new THREE.PerspectiveCamera(FOV, aspectRatio, NEAR, FAR)
+  const FOV = 35
+  const aspectRatio = container.clientWidth / container.clientHeight
+  const NEAR = 0.1
+  // A scene 100m big is a decent size for a scene
+  const FAR = 100
 
-camera.position.set(0, 0, 10)
+  // viewing fustrum = four-sided rectangular prism with top cut off
+  camera = new THREE.PerspectiveCamera(FOV, aspectRatio, NEAR, FAR)
 
-// BufferGeometry = newer and faster version of geometry
-const geometry = new THREE.BoxBufferGeometry(2, 2, 2)
+  camera.position.set(0, 0, 10)
 
-// Mesh Basics completely ignore light
-const material = new THREE.MeshBasicMaterial()
+  // BufferGeometry = newer and faster version of geometry
+  const geometry = new THREE.BoxBufferGeometry(2, 2, 2)
 
-// Meshes are the most common kind of visible object in 3D computer graphics
-const mesh = new THREE.Mesh(geometry, material)
+  // Mesh Basics completely ignore light
+  const material = new THREE.MeshBasicMaterial({ color: 0x800080 })
 
-scene.add(mesh)
-// could do scene.remove() if we needed to
+  // Meshes are the most common kind of visible object in 3D computer graphics
+  mesh = new THREE.Mesh(geometry, material)
 
-const renderer = new THREE.WebGLRenderer()
+  scene.add(mesh)
+  // could do scene.remove() if we needed to
 
-renderer.setSize(container.clientWidth, container.clientHeight)
-// this helps with mobile responsiveness
-renderer.setPixelRatio(window.devicePixelRatio)
+  renderer = new THREE.WebGLRenderer()
 
-container.appendChild(renderer.domElement)
+  renderer.setSize(container.clientWidth, container.clientHeight)
+  // this helps with mobile responsiveness
+  renderer.setPixelRatio(window.devicePixelRatio)
 
-renderer.render(scene, camera)
+  container.appendChild(renderer.domElement)
+}
+
+const animate = () => {
+  requestAnimationFrame(animate)
+  renderer.render(scene, camera)
+}
+
+init()
+animate()
